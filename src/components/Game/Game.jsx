@@ -3,36 +3,31 @@ import React from 'react';
 import { sample } from '../../utils';
 import { WORDS } from '../../data';
 
+import GuessResults from '../GuessResults/GuessResults';
+import GuessInput from '../GuessInput/GuessInput';
+
 // Pick a random word on every pageload.
 const answer = sample(WORDS);
 // To make debugging easier, we'll log the solution in the console.
 console.info({ answer });
 
-function Game({handleAddGuess}) {
-  const [guess, setGuess] = React.useState('');
+function Game() {
+  const [guesses, setGuesses] = React.useState([]);
+
+  const handleAddGuess = (input) => {
+    const nextGuesses = [
+      ...guesses,
+      input
+    ]
+
+    setGuesses(nextGuesses);
+  }
 
   return (
-    <form
-      className='guess-input-wrapper'
-      onSubmit={(event) => {
-        event.preventDefault();
-        console.log({ guess: guess })
-        handleAddGuess(guess);
-      }}
-    >
-      <label htmlFor='guess-input'>Enter guess:</label>
-      <input
-        id='guess-input'
-        type='text'
-        value={guess}
-        onChange={(event) => {
-          setGuess(event.target.value.toUpperCase());
-        }}
-        minLength={5}
-        maxLength={5}
-        pattern='[a-zA-Z]{5}'
-      />
-    </form>
+    <>
+      <GuessResults guesses={guesses} />
+      <GuessInput handleAddGuess={handleAddGuess} />
+    </>
   )
 }
 
